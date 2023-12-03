@@ -10,71 +10,80 @@ fs.readFile("input.txt", function read(err, data) {
   let totalPartTwo = 0;
 
   let schematic = values.map((val) => val.replace(/^[^:]*:/, ""));
-  schematic = schematic.map(s => s.split(''));
+  schematic = schematic.map((s) => s.split(""));
 
   const findNum = (y, x) => {
     let num = schematic[y][x];
 
     // Check right
-    let right = x+1;
+    let right = x + 1;
     while (right < schematic[y].length && schematic[y][right].match(/\d/)) {
-        num += schematic[y][right];
-        right += 1
+      num += schematic[y][right];
+      right += 1;
     }
 
     // Check left
-    let left = x-1;
+    let left = x - 1;
     while (left > -1 && schematic[y][left].match(/\d/)) {
-        num = schematic[y][left] + num;
-        left -= 1
+      num = schematic[y][left] + num;
+      left -= 1;
     }
 
     return num;
-  }
+  };
 
   let tempTotal = [];
+  let totalGears = 0;
 
   const check = (y, x) => {
     const val = schematic[y][x];
-    if (!val) return false;
+    if (!val) return;
     if (val.match(/\d/)) tempTotal.push(findNum(y, x));
-}
+  };
 
+  const check2 = (y, x) => {
+    const val = schematic[y][x];
+    if (!val) return;
+    if (val.match(/\d/)) tempTotal.push(findNum(y, x));
+  };
   const checkAround = (y, x) => {
     if (y === 0) {
-        check(y, x-1);
-        check(y+1, x-1);
-        check(y, x+1);
-        check(y+1, x+1);
-    } else if (y === schematic.length -1) {
-        check(y-1, x);
-        check(y-1, x-1);
-        check(y-1, x+1);
-        check(y, x+1);
-        check(y, x-1);
+      check(y, x - 1);
+      check(y + 1, x - 1);
+      check(y, x + 1);
+      check(y + 1, x + 1);
+    } else if (y === schematic.length - 1) {
+      check(y - 1, x);
+      check(y - 1, x - 1);
+      check(y - 1, x + 1);
+      check(y, x + 1);
+      check(y, x - 1);
     } else {
-        check(y+1, x);
-        check(y-1, x);
-        check(y, x-1);
-        check(y+1, x-1);
-        check(y-1, x-1);
-        check(y, x+1);
-        check(y+1, x+1);
-        check(y-1, x+1);
+      check(y + 1, x);
+      check(y - 1, x);
+      check(y, x - 1);
+      check(y + 1, x - 1);
+      check(y - 1, x - 1);
+      check(y, x + 1);
+      check(y + 1, x + 1);
+      check(y - 1, x + 1);
     }
-    totalPartOne.push(...new Set(tempTotal))
+    tempTotal = [...new Set(tempTotal)];
+    if (tempTotal.length === 2) totalPartTwo += tempTotal[0] * tempTotal[1];
+    totalPartOne.push(tempTotal);
     tempTotal = [];
-  }
+  };
 
-
-
-  for (let y = 0;y < schematic.length;y++) {
-    for (let x = 0;x < schematic[y].length;x++) {
-        if (!schematic[y][x].match(/\d|\./)) {
-            checkAround(y, x)
-        }
+  for (let y = 0; y < schematic.length; y++) {
+    for (let x = 0; x < schematic[y].length; x++) {
+      if (!schematic[y][x].match(/\d|\./)) {
+        checkAround(y, x);
+      }
     }
   }
 
-  console.log('Part 1', totalPartOne.reduce((a, b) => parseInt(a) + parseInt(b), 0))
+  totalPartOne = totalPartOne.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+
+  console.log("Part 1", totalPartOne);
+  console.log("Part 2", totalPartTwo);
 });
