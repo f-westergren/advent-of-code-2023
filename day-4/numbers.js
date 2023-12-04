@@ -14,15 +14,31 @@ fs.readFile("input.txt", function read(err, data) {
   cards = cards.map((card) => (card = card.map((c) => (c = c.split(" ")))));
 
   let totalPartOne = 0;
-  const overlappingCards = [];
+  let overlappingCards = [];
 
   cards.forEach((card) => {
     overlappingCards.push(card[0].filter((val) => card[1].includes(val)));
   });
 
-  overlappingCards.forEach((card) => {
+  overlappingCards = overlappingCards.map((card) => {
     if (card.length > 0) totalPartOne += 1 * Math.pow(2, card.length - 1);
+    return [card.length, 1];
   });
 
+  overlappingCards.forEach((card, index) => {
+    for (let i = 0; i < card[1]; i++) {
+      let j = 1;
+      while (j <= card[0]) {
+        overlappingCards[index + j][1] += 1;
+        j += 1;
+      }
+    }
+  });
+
+  let totalPartTwo = overlappingCards
+    .map((card) => card[1])
+    .reduce((total, a) => total + a, 0);
+
   console.log("Part 1", totalPartOne);
+  console.log("Part 2", totalPartTwo);
 });
