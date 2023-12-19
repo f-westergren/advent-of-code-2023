@@ -68,8 +68,4 @@ fs.readFile("input.txt", function read(err, data) {
   });
 
   console.log("Part 1:", total);
-  //   console.log(dp)
 });
-
-// too low 11317
-// too low 23097
